@@ -1,4 +1,4 @@
-(clojure.core/ns skeleton.listener
+(clojure.core/ns schedule.listener
   (:gen-class :implements [javax.servlet.ServletContextListener]))
 (do
   (clojure.core/defn -contextInitialized [my-arg1 my-arg2]
@@ -6,8 +6,8 @@
     (clojure.core/let [my-arg3
       (clojure.core/let [my-arg4
         (do
-          (clojure.core/require (quote skeleton.web))
-          (clojure.core/resolve (quote skeleton.web/handler)))]
+          (clojure.core/require (quote schedule.web))
+          (clojure.core/resolve (quote schedule.web/handler)))]
         (clojure.core/fn [my-arg5]
           (clojure.core/let [my-arg6
             (.getContextPath ^{:column 27, :line 127, :tag javax.servlet.http.HttpServletRequest}
@@ -24,7 +24,7 @@
       my-arg7 (service-method1 my-arg3)]
       (clojure.core/alter-var-root
         (do
-          (clojure.core/require (quote skeleton.servlet))
-          (clojure.core/resolve (quote skeleton.servlet/service-method)))
+          (clojure.core/require (quote schedule.servlet))
+          (clojure.core/resolve (quote schedule.servlet/service-method)))
         (clojure.core/constantly my-arg7))))
   (clojure.core/defn -contextDestroyed [my-arg1 my-arg2] nil))

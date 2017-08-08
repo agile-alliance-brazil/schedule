@@ -1,4 +1,4 @@
-(ns skeleton.web
+(ns schedule.web
   (:gen-class)
   (:use org.httpkit.server)
   (:require
@@ -17,8 +17,8 @@
     [optimus.assets :as assets]
     [optimus.optimizations :as optimizations]
     [optimus.strategies :as strategies]
-    [skeleton.hello :as hello]
-    [skeleton.status :as status]
+    [schedule.hello :as hello]
+    [schedule.status :as status]
   )
 )
 

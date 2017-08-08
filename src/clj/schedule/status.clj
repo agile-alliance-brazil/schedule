@@ -1,11 +1,11 @@
-(ns skeleton.status
+(ns schedule.status
   (:require
     [clojure.tools.logging :as log]
     [hiccup.page :as page]
     [optimus.link :as link]
     [clj-http.client :as client]
     [monger.collection :as mc]
-    [skeleton.db.config :as config]))
+    [schedule.db.config :as config]))
 
 (defn- db-status []
   (try

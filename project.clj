@@ -1,13 +1,13 @@
 (let [version (str "1.0.0_" (or (System/getenv "BUILD_NUMBER") "SNAPSHOT"))]
-  (defproject skeleton version
-    :description "A skeleton clojure server"
-    :url "https://skeleton.herokuapps.com"
+  (defproject schedule version
+    :description "A schedule clojure server"
+    :url "https://schedule.herokuapps.com"
     :license {:name "MIT"}
     :min-lein-version "2.0.0"
     :source-paths ["src/clj", "war/WEB-INF/classes"] ;Making log4j available
     :test-paths ["test/clj"]
-    :main skeleton.web
-    :aot [skeleton.web]
+    :main schedule.web
+    :aot [schedule.web]
     :dependencies [[org.clojure/clojure "1.8.0"]
       [org.clojure/data.zip "0.1.2"]
       [org.clojure/data.xml "0.0.8"]
@@ -33,10 +33,10 @@
       [optimus "0.19.0"]]
     :plugins [[lein-environ "1.0.2"]]
     :ring
-      { :handler skeleton.web/handler
-        :uberwar-name ~(str "skeleton-with-dependencies_" version ".war")}
+      { :handler schedule.web/handler
+        :uberwar-name ~(str "schedule-with-dependencies_" version ".war")}
     :uberjar {:aot :all}
-    :uberjar-name ~(str "skeleton-standalone_" version ".jar")
+    :uberjar-name ~(str "schedule-standalone_" version ".jar")
     :profiles {
       :production
       {:env {:production "true" :clj-env "production"}}
@@ -56,7 +56,7 @@
         :dependencies [[clj-livereload "0.2.0"]
           [org.clojure/tools.nrepl "0.2.12"]]
         :injections [(require 'clj-livereload.server)
-          (clj-livereload.server/start! {:paths ["resources/public/" "src/clj/skeleton/"] :debug? true})]
+          (clj-livereload.server/start! {:paths ["resources/public/" "src/clj/schedule/"] :debug? true})]
         :cooper {"test"   ["lein" "with-profile" "base,test" "test-refresh"]
                  "mongo"  ["mongod" "--dbpath" "tmp/db/data"]
                  "server" ["lein" "run"]}}
@@ -66,5 +66,5 @@
         :dependencies [[org.clojure/tools.nrepl "0.2.12"]]
         :resource-paths ["resources"]}}
     :test-refresh {:notify-command ["terminal-notifier" "-title" "Skeleton Tests" "-message"]}
-    :aliases {"migrate"  ["with-profile" "base" "run" "-m" "skeleton.db.migration/migrate"]
-              "rollback" ["with-profile" "base" "run" "-m" "skeleton.db.migration/rollback"]}))
+    :aliases {"migrate"  ["with-profile" "base" "run" "-m" "schedule.db.migration/migrate"]
+              "rollback" ["with-profile" "base" "run" "-m" "schedule.db.migration/rollback"]}))

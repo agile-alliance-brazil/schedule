@@ -1,4 +1,4 @@
-(clojure.core/ns skeleton.servlet
+(clojure.core/ns schedule.servlet
   (:gen-class :extends javax.servlet.http.HttpServlet))
 (def service-method)
 (clojure.core/defn -service [arg1 arg2 arg3]

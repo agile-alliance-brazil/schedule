@@ -1,4 +1,4 @@
-(ns skeleton.db.config
+(ns schedule.db.config
   (:require [environ.core :refer [env]]
     [jdbc.pool.c3p0 :as pool]
     [monger.core :as mg]

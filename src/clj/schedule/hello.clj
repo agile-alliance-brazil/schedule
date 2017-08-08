@@ -1,4 +1,4 @@
-(ns skeleton.hello
+(ns schedule.hello
   (:require
     [clojure.tools.logging :as log]
     [hiccup.page :as page]

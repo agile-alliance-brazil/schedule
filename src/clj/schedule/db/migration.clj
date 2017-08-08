@@ -1,8 +1,8 @@
-(ns skeleton.db.migration
+(ns schedule.db.migration
   (:gen-class)
   (:require [ragtime.jdbc :as jdbc]
     [ragtime.repl :as repl]
-    [skeleton.db.config :as config]))
+    [schedule.db.config :as config]))
 
 (def ragtime-config
   {
