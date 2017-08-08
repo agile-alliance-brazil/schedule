@@ -17,7 +17,7 @@
     [optimus.assets :as assets]
     [optimus.optimizations :as optimizations]
     [optimus.strategies :as strategies]
-    [schedule.hello :as hello]
+    [schedule.scheduler :as scheduler]
     [schedule.status :as status]
   )
 )
@@ -25,7 +25,7 @@
 (defn in-dev? [] (= "true" (env :dev)))
 
 (defroutes site-routes
-  (GET "/" request (hello/render-view request))
+  (GET "/" request (scheduler/render-view request))
   (GET "/status" request (status/render-view request)))
 
 (defroutes api-routes
@@ -35,10 +35,16 @@
 
 (defn get-assets []
   (concat
-    (assets/load-bundles "public"
-      {"application.js" ["/js/template.js"]})
-    (assets/load-bundles "public"
-      {"application.css" ["/css/template.css"]})))
+      (assets/load-bundles "public"
+        {
+          "application.js" ["/js/template.js"]
+          "scheduler.js" ["/js/scheduler.js"]
+        })
+      (assets/load-bundles "public"
+        {
+          "application.css" ["/css/template.css"]
+          "scheduler.css" ["/css/scheduler.css"]
+        })))
 
 (defn wrap-with-logger [handler]
   (let [logging-handler (logger/wrap-with-logger handler)]
