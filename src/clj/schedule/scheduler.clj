@@ -11,28 +11,28 @@
       (map page/include-css (link/bundle-paths request ["scheduler.css"]))]
     [:body {}
       [:main#app
-        [:div {:v-for "day in days" ::key "day.date"}
-          [:day-component {:v-bind:rooms "rooms" :v-bind:day "day"}]]
         [:unassigned-sessions-component {:v-bind:sessions "sessions"}]
+        [:section.days
+          [:day-component {:v-for "day in days" ::key "day.date" :v-bind:rooms "rooms" :v-bind:day "day"}]]
       ]
       [:script#day-template {:type "text/x-template"}
-        [:table
+        [:table.day
           [:thead
-            [:th "{{date}}"]
-            [:th {:v-for "room in rooms"} "{{room}}"]
+            [:th.date "{{date}}"]
+            [:th.room {:v-for "room in rooms"} "{{room}}"]
           ]
           [:tbody
-            [:tr {:v-for "slot in timeslots"}
-              [:td "{{slot}}"]
+            [:tr.slots {:v-for "slot in timeslots"}
+              [:th.slot "{{slot}}"]
               [:td {:v-for "room in rooms"}]]
           ]
         ]
       ]
       [:script#unassigned-sessions-template {:type "text/x-template"}
-        [:section
+        [:section.unassigned
           [:h2 "Unassigned"]
-          [:ul
-            [:li {:v-for "session in sessions" ::key "session.id"}
+          [:ul.sessions
+            [:li.session {:v-for "session in sessions" ::key "session.id"}
               [:session-component {:v-bind:session "session"}]
             ]
           ]
