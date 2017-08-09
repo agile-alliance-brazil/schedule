@@ -1,3 +1,22 @@
+let sessionComponent = Vue.component('session-component', {
+  template: '#session-template',
+  props: {
+    session: Object
+  },
+  computed: {
+    authors: function() {
+      return this.session.authors.join(' & ');
+    }
+  }
+})
+
+let unassignedSessionsComponent = Vue.component('unassigned-sessions-component', {
+  template: '#unassigned-sessions-template',
+  props: {
+    sessions: Array
+  }
+})
+
 let dayComponent = Vue.component('day-component', {
   template: '#day-template',
   props: {
@@ -38,7 +57,9 @@ let dayComponent = Vue.component('day-component', {
 let app = new Vue({
   el: '#app',
   components: {
-    "day-template": dayComponent
+    "day-component": dayComponent,
+    "unassigned-sessions-component": unassignedSessionsComponent,
+    "session-component": sessionComponent
   },
   data: {
     rooms: [
@@ -54,20 +75,36 @@ let app = new Vue({
         date: new Date(2017, 8, 13),
         startTimeInMinutes: 540,
         endTimeInMinutes: 1080,
-        slotSizeInMinutes: 30,
+        slotSizeInMinutes: 30
       },
       {
         date: new Date(2017, 8, 14),
         startTimeInMinutes: 540,
         endTimeInMinutes: 1080,
-        slotSizeInMinutes: 30,
+        slotSizeInMinutes: 30
       },
       {
         date: new Date(2017, 8, 15),
         startTimeInMinutes: 540,
         endTimeInMinutes: 1080,
-        slotSizeInMinutes: 30,
+        slotSizeInMinutes: 30
       }
-    ]
+    ],
+    sessions: [
+      {
+        id: 1,
+        title: "lalala",
+        authors: ["Ceci", "Hugo"],
+        track: "software",
+        audienceLevel: "advanced"
+      },
+      {
+        id: 2,
+        title: "lilili",
+        authors: ["VH", "Giovanni"],
+        track: "guerigueri",
+        audienceLevel: "master"
+      }
+    ],
   }
 })

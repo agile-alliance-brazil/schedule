@@ -12,7 +12,8 @@
     [:body {}
       [:main#app
         [:div {:v-for "day in days" ::key "day.date"}
-          [:day-template {:v-bind:rooms "rooms" :v-bind:day "day"}]]
+          [:day-component {:v-bind:rooms "rooms" :v-bind:day "day"}]]
+        [:unassigned-sessions-component {:v-bind:sessions "sessions"}]
       ]
       [:script#day-template {:type "text/x-template"}
         [:table
@@ -25,6 +26,24 @@
               [:td "{{slot}}"]
               [:td {:v-for "room in rooms"}]]
           ]
+        ]
+      ]
+      [:script#unassigned-sessions-template {:type "text/x-template"}
+        [:section
+          [:h2 "Unassigned"]
+          [:ul
+            [:li {:v-for "session in sessions" ::key "session.id"}
+              [:session-component {:v-bind:session "session"}]
+            ]
+          ]
+        ]
+      ]
+      [:script#session-template {:type "text/x-template"}
+        [:div.session
+          [:h3 "{{session.title}}"]
+          [:p "{{authors}}"]
+          [:span "{{session.track}}"]
+          [:span "{{session.audienceLevel}}"]
         ]
       ]
       (page/include-js "https://unpkg.com/vue")
