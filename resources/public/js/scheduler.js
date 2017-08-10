@@ -8,7 +8,7 @@ let sessionComponent = Vue.component('session-component', {
       return this.session.authors.join(' & ');
     }
   }
-})
+});
 
 let unassignedSessionsComponent = Vue.component('unassigned-sessions-component', {
   template: '#unassigned-sessions-template',
@@ -26,14 +26,14 @@ let unassignedSessionsComponent = Vue.component('unassigned-sessions-component',
       return Math.ceil(session.duration / this.slotSizeInMinutes);
     }
   }
-})
+});
 
 let dayComponent = Vue.component('day-component', {
   template: '#day-template',
   props: {
     day: Object,
     rooms: Array,
-    slotSizeInMinutes: Number
+    slots: Object
   },
   computed: {
     date: function() {
@@ -42,46 +42,8 @@ let dayComponent = Vue.component('day-component', {
     options: function() {
       return {group: "sessions"};
     }
-  },
-  methods: {
-    pad: function(num, size) {
-      let s = num+"";
-      while (s.length < size) s = "0" + s;
-      return s;
-    },
-    timeslots: function() {
-      if (typeof(this.timeslotsData) === 'undefined') {
-        let startTime, endTime;
-        startTime = this.day.startTimeInMinutes;
-        endTime = this.day.endTimeInMinutes;
-        let slotSize = this.slotSizeInMinutes;
-        totalTimeslots = (endTime - startTime) / slotSize;
-
-        this.timeslotsData = [];
-        let lastTimeslot = startTime;
-        for (let i = 0; i < totalTimeslots; i++) {
-          let hours = this.pad(Math.floor(lastTimeslot / 60), 2);
-          let minutes = this.pad(lastTimeslot % 60, 2);
-          time = `${hours}:${minutes}`
-          timeslot = {
-            time: time,
-            roomSlots: this.rooms.map(function(room) {
-              return {
-                room: room,
-                time: time,
-                sessions: [],
-                id: `${room}${hours}${minutes}Slot`
-              }
-            })
-          };
-          this.timeslotsData.push(timeslot);
-          lastTimeslot = lastTimeslot + slotSize;
-        }
-      }
-      return this.timeslotsData;
-    }
   }
-})
+});
 
 let app = new Vue({
   el: '#app',
@@ -138,5 +100,59 @@ let app = new Vue({
       }
     ],
     slots: {}
+  },
+  mounted: function() {
+    this.slots = this.buildSlots()
+  },
+  methods: {
+    buildSlots: function() {
+      let sessionsByTimeByRoomByDays = this.days.reduce((s, day) => {
+        s[day.date.toUTCString()] = this.rooms.reduce((d, room) => {
+          let timeslots = this.timeSlotsFor(day);
+          d.timeslots = timeslots;
+          
+          d[room] = timeslots.reduce((r, time) => {
+            r[time] = this.sessions.filter((session) => {
+              return session.room === room && session.day === day && session.time === time;
+            });
+
+            return r;
+          }, {});
+
+          return d;
+        }, {});
+
+        return s;
+      }, {});
+
+      sessionsByTimeByRoomByDays['unassigned'] = this.sessions.filter((session) => {
+        return typeof(session.room) === 'undefined' || typeof(session.day) === 'undefined' || typeof(session.time) === 'undefined';
+      });
+
+      return sessionsByTimeByRoomByDays;
+    },
+    timeSlotsFor: function(day) {
+      let startTime, endTime;
+      startTime = day.startTimeInMinutes;
+      endTime = day.endTimeInMinutes;
+      let slotSize = this.slotSizeInMinutes;
+      totalTimeslots = (endTime - startTime) / slotSize;
+
+      let timeslotsData = [];
+      let lastTimeslot = startTime;
+      for (let i = 0; i < totalTimeslots; i++) {
+        let hours = this.pad(Math.floor(lastTimeslot / 60), 2);
+        let minutes = this.pad(lastTimeslot % 60, 2);
+        let time = `${hours}:${minutes}`
+        timeslotsData.push(time);
+        lastTimeslot = lastTimeslot + slotSize;
+      }
+      return timeslotsData;
+    },
+    pad: function(num, size) {
+      let s = num+"";
+      while (s.length < size) s = "0" + s;
+      return s;
+    }
   }
-})
+});

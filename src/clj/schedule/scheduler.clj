@@ -11,9 +11,9 @@
       (map page/include-css (link/bundle-paths request ["scheduler.css"]))]
     [:body {}
       [:main#app
-        [:unassigned-sessions-component {:v-bind:sessions "sessions" :v-bind:slot-size-in-minutes "slotSizeInMinutes"}]
+        [:unassigned-sessions-component {:v-bind:sessions "slots['unassigned']" :v-bind:slot-size-in-minutes "slotSizeInMinutes"}]
         [:section.days
-          [:day-component {:v-for "day in days" ::key "day.date" :v-bind:rooms "rooms" :v-bind:day "day" :v-bind:slot-size-in-minutes "slotSizeInMinutes"}]]
+          [:day-component {:v-for "day in days" ::key "day.date" :v-bind:rooms "rooms" :v-bind:day "day" :v-bind:slots "slots[day.date.toUTCString()]"}]]
       ]
       [:script#day-template {:type "text/x-template"}
         [:table.day
@@ -22,11 +22,11 @@
             [:th.room {:v-for "room in rooms"} "{{room}}"]
           ]
           [:tbody
-            [:tr.slots {:v-for "slot in timeslots()"}
-              [:th.slot "{{slot.time}}"]
-              [:td {:v-for "roomSlot in slot.roomSlots" ::key "roomSlot.id"}
-                [:draggable.slotSessions {:v-model "roomSlot.sessions" :element "ul" :v-bind:options "options"}
-                  [:session-component {:v-for "session in roomSlot.sessions" ::key "session.id" :v-bind:session "session"}]
+            [:tr.slots {:v-for "time in slots.timeslots"}
+              [:th.slot "{{time}}"]
+              [:td {:v-for "room in rooms" ::key "room"}
+                [:draggable.slotSessions {:v-model "slots[room][time]" :element "ul" :v-bind:options "options"}
+                  [:session-component {:v-for "session in slots[room][time]" ::key "session.id" :v-bind:session "session"}]
                 ]
               ]
             ]
