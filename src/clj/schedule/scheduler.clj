@@ -11,9 +11,9 @@
       (map page/include-css (link/bundle-paths request ["scheduler.css"]))]
     [:body {}
       [:main#app
-        [:unassigned-sessions-component {:v-bind:sessions "sessions"}]
+        [:unassigned-sessions-component {:v-bind:sessions "sessions" :v-bind:slot-size-in-minutes "slotSizeInMinutes"}]
         [:section.days
-          [:day-component {:v-for "day in days" ::key "day.date" :v-bind:rooms "rooms" :v-bind:day "day"}]]
+          [:day-component {:v-for "day in days" ::key "day.date" :v-bind:rooms "rooms" :v-bind:day "day" :v-bind:slot-size-in-minutes "slotSizeInMinutes"}]]
       ]
       [:script#day-template {:type "text/x-template"}
         [:table.day
@@ -22,29 +22,36 @@
             [:th.room {:v-for "room in rooms"} "{{room}}"]
           ]
           [:tbody
-            [:tr.slots {:v-for "slot in timeslots"}
-              [:th.slot "{{slot}}"]
-              [:td {:v-for "room in rooms"}]]
+            [:tr.slots {:v-for "slot in timeslots()"}
+              [:th.slot "{{slot.time}}"]
+              [:td {:v-for "roomSlot in slot.roomSlots" ::key "roomSlot.id"}
+                [:draggable.slotSessions {:v-model "roomSlot.sessions" :element "ul" :v-bind:options "options"}
+                  [:session-component {:v-for "session in roomSlot.sessions" ::key "session.id" :v-bind:session "session"}]
+                ]
+              ]
+            ]
           ]
         ]
       ]
       [:script#unassigned-sessions-template {:type "text/x-template"}
         [:section.unassigned
           [:h2 "Unassigned"]
-          [:ul.sessions
-            [:li.session {:v-for "session in sessions" ::key "session.id"}
+          [:draggable.sessions {:v-model "sessions" :element "ul" :v-bind:options "options"}
+            [:li {:v-for "session in sessions" ::key "session.id" :v-bind:data-duration "slotspan(session)" }
               [:session-component {:v-bind:session "session"}]
             ]
           ]
         ]
       ]
       [:script#session-template {:type "text/x-template"}
-        [:div.session
-          [:h3 "{{session.title}}"]
-          [:p "{{authors}}"]
-          [:span "{{session.track}}"]
-          [:span "{{session.audienceLevel}}"]
+        [:div.session.item
+          [:span.id "{{session.id}}"]
+          [:h3.title "{{session.title}}"]
+          [:p.authors "{{authors}}"]
+          [:span.track "{{session.track}}"]
+          [:span.audienceLevel "{{session.audienceLevel}}"]
         ]
       ]
-      (page/include-js "https://unpkg.com/vue")
+
+      (map page/include-js ["https://unpkg.com/sortablejs" "https://unpkg.com/vue" "https://unpkg.com/vuedraggable"])
       (map page/include-js (link/bundle-paths request ["scheduler.js"]))]))

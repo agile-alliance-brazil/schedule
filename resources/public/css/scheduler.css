@@ -1,19 +1,38 @@
 body {
 	font-family: Helvetica;
 }
-table {
+table.day {
 	border: 1px solid black;
 	width: 80%;
 	margin: 1em 0;
 	border-collapse: collapse;
-	display: inline-table;
 }
-table th, table td {
+table.day th, table.day td {
 	border: 1px solid black;
 	margin: 0;
+	width: 15%;
+	padding: 0;
 }
-table th.slot {
+table.day th.date, table.day th.slot {
 	width: 1%;
+}
+table.day ul.slotSessions {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	min-height: 3em;
+}
+table.day ul.slotSessions .session {
+	border: 1px solid black;
+	margin: 0.1em 0;
+	padding: 0.1em;
+	font-size: 80%;
+	width: 10em;
+	height: 3em;
+}
+table.day .session .authors, table.day .session .track, table.day .session .audienceLevel {
+	display: none;
 }
 section.unassigned {
 	float: right;
@@ -24,6 +43,7 @@ ul.sessions {
 	list-style-type: none;
 	padding: 0;
 	width: 100%;
+	min-height: 10em;
 }
 ul.sessions li .session {
 	border: 1px solid black;
@@ -32,4 +52,10 @@ ul.sessions li .session {
 }
 ul.sessions li .session h3 {
 	margin: 0;
+}
+table.day .sortable-ghost.sortable-chosen {
+	display: none;
+}
+.sortable-drag {
+	opacity: 1%;
 }
